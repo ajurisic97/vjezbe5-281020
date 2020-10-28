@@ -1,5 +1,8 @@
 const info = (...poruke) => {
-  console.log(...poruke);
+  if(process.env.NODE_ENV!=='test'){
+    console.log(...poruke);
+
+  }
 }
 
 const greska = (...poruke) => {
