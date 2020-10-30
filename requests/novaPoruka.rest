@@ -1,8 +1,8 @@
 POST http://localhost:3001/api/poruke
-content-type: application/json
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFqdXJpc2ljIiwiaWQiOiI1ZjljMjM1OGYxZjExYzI5ZjgzNTA1YTYiLCJpYXQiOjE2MDQwNzM5NDl9.-uyq6dKZ6weEl6z_lukw4zgbVyMh1OOgx8XVuyRl5uM
 
 {
-  "sadrzaj": "Poruka dva",
-  "vazno": false,
-  "korisnikId": "5f9c2358f1f11c29f83505a6"
+  "sadrzaj": "Poruka sa tokenom",
+  "vazno": true
 }

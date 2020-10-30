@@ -24,7 +24,7 @@ loginRouter.post('/', async (req, res) => {
     }
 
     const korisnikToken = {
-      username = korisnik.username,
+      username : korisnik.username,
       id: korisnik._id
     }
     const token = jwt.sign(korisnikToken, process.env.SECRET)
@@ -32,9 +32,7 @@ loginRouter.post('/', async (req, res) => {
     res
     .status(200)
     .send({
-      token, 
-      username: korisnik.username,
-      ime: korisnik.ime
+      token,username: korisnik.username,ime: korisnik.ime
     })
 })
 
