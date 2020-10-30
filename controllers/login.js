@@ -9,7 +9,10 @@ loginRouter.post('/', async (req, res) => {
     const korisnik = await Korisnik.findOne({
         username: podaci.username
     })
-    
+
+    // ako korisnik nije null onda usporedivamo. Saljemo 2 parametra
+    // iz podataka usporedujemo "pass" iz frontenda i usporedujemo sa njegovim podacima iz baze
+
     const passDobar = korisnik === null
     ? false
     : await bcrypt.compare(podaci.pass, korisnik.passHash)
@@ -20,14 +23,18 @@ loginRouter.post('/', async (req, res) => {
       })
     }
 
-    const userToken = {
+    const korisnikToken = {
       username = korisnik.username,
       id: korisnik._id
     }
-    const token = jwt.sign(userToken, process.env.SECRET)
+    const token = jwt.sign(korisnikToken, process.env.SECRET)
 
-    res.status(200).send({
-      token, username: korisnik.username, ime: korisnik.ime
+    res
+    .status(200)
+    .send({
+      token, 
+      username: korisnik.username,
+      ime: korisnik.ime
     })
 })
 
