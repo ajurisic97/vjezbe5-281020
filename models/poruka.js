@@ -13,6 +13,10 @@ const porukaSchema = new mongoose.Schema({
   vazno: {
     type: Boolean,
     default: false
+  },
+  korisnik: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Korisnik'
   }
 })
 

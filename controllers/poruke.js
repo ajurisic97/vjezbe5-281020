@@ -1,10 +1,11 @@
 const porukeRouter = require('express').Router()
 const Poruka = require('../models/poruka')
+const Korisnik = require('../models/korisnik')
+porukeRouter.get('/', async (req, res) => {
+  const poruke = await Poruka.find({})
+  .populate('korisnik', {ime:1})
 
-porukeRouter.get('/', (req, res) => {
-  Poruka.find({}).then(rezultat => {    
-    res.json(rezultat)
-  })
+  res.json(poruke)
 })
 
 porukeRouter.get('/:id', (req, res, next) => {
@@ -56,14 +57,18 @@ porukeRouter.get('/:id', async (req, res) => {
 
 porukeRouter.post('/', async (req, res, next) => {
   const podatak = req.body
+  const korisnik = await Korisnik.findById(req.body.korisnikId)
+  
 
   const poruka = new Poruka({
     sadrzaj: podatak.sadrzaj,
     vazno: podatak.vazno || false,
-    datum: new Date()
+    datum: new Date(),
+    korisnik: korisnik._id
   })
-  
   const spremljenaPoruka = await poruka.save()
+  korisnik.poruke = korisnik.poruke.concat(spremljenaPoruka._id)
+  await korisnik.save()
   res.json(spremljenaPoruka)
 
   // poruka.save()
