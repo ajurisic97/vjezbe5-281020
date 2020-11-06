@@ -1,1 +1,3 @@
 DELETE http://localhost:3001/api/poruke/2
+
+//subString i defToken

@@ -3,6 +3,7 @@ const {TestScheduler} = require('jest')
 const supertest = require('supertest')
 const app = require('../app')
 const Poruka = require("../models/poruka")
+const jwt = require('jsonwebtoken');
 
 const pomocni = require('./pomocni')
 const api = supertest(app)
@@ -121,6 +122,19 @@ test('ispravno brisanje poruke', async () => {
     expect(sadrzaj).not.toContain(porukaZaBrisanje.sadrzaj)
   
   })
+test('ispravno uredivanje poruke',async()=>{
+  const porukaPocetna=await pomocni.porukeIzBaze()
+  const usporedba = porukaPocetna
+  const porukaZaUredivanje=porukaPocetna[0]
+  porukaZaUredivanje.vazno=false;
+  const odgovor = await api.put(`/api/poruke/${porukaZaUredivanje.id}`)
+  .expect(200)
+
+  const porukeKraj=await pomocni.porukeIzBaze()
+  const sadrzaj = porukeKraj.map(p => p.sadrzaj)
+  expect(sadrzaj).toContain(porukaZaUredivanje.sadrzaj)
+  expect(sadrzaj).not.toContain(usporedba.sadrzaj)
+})
 
 afterAll(() => {
   mongoose.connection.close()

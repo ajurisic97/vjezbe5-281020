@@ -34,6 +34,24 @@ porukeRouter.get('/:id', (req, res, next) => {
 })
 
 porukeRouter.delete('/:id', async(req, res) => {
+  
+  const porukaId=req.params.id
+  const poruka=await Poruka.findById(porukaId)
+  const token = dohvatiToken(req)
+  const dekToken=jwt.verify(token.process.env.SECRET)
+
+  if(!token || !dekToken.id){
+    return res.status(401).json({
+      error: 'Neispravan token!!'
+    })
+  }
+  if(dekToken.id!=poruka.korisnik){
+    return res.status(401).json({
+      error: 'Nije racun vlasnika'
+    })
+  }
+
+  
   await Poruka.findByIdAndRemove(req.params.id)
   res.status(204).end()
     // .then(result => {
@@ -66,7 +84,39 @@ porukeRouter.get('/:id', async (req, res) => {
 //   .catch(err => next(err))
 
 // })
+porukeRouter.put('/:id', async (req, res) => {
+     const podatak = req.body
+     const id = req.params.id
+     const zeljena = await Poruka.findById(id)
+     const token = dohvatiToken(req)
+     const dekToken=jwt.verify(token, process.env.SECRET)
+     if(!token || !dekToken.id){
+      return res.status(401).json({
+        error: 'Neispravan token!!'
+      })
+    }
+    if(dekToken.id!=poruka.korisnik){
+      return res.status(401).json({
+        error: 'Nije racun vlasnika'
+      })
+    }
+     const poruka = {
+       sadrzaj: podatak.sadrzaj,
+       vazno: podatak.vazno
+     }
+     
+     Poruka.findByIdAndUpdate(id,poruka, {new: true})
+     .then(novaP => {res.json(novaP)})
+     .catch(err => next(err))
+     /*.then( novaPoruka => {
+       res.json(novaPoruka)
+     })
+     
+     .catch(err => next(err))*/
 
+
+
+})
 porukeRouter.post('/', async (req, res, next) => {
   const podatak = req.body
 
